@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealDishMapper">
+
+    <!--select setmeal_id from setmeal_dish where dish_id in (1,2,3,4)-->
+    <select id="getSetmealIdsByDishIds" resultType="java.lang.Long">
+        select setmeal_id from setmeal_dish where dish_id in
+        <foreach collection="dishIds" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
+    </select>
+
+    <!--    保存套餐和菜品的关联关系-->
+    <insert id="insertBatch" useGeneratedKeys="true" keyProperty="id">
+        insert into setmeal_dish (setmeal_id, dish_id, name, price, copies) VALUES
+        <foreach collection="setmealDishes" separator="," item="item">
+            (#{item.setmealId},#{item.dishId},#{item.name},#{item.price},#{item.copies})
+        </foreach>
+    </insert>
+
+    <!--    删除套餐餐品关系表中的数据-->
+    <delete id="deleteBySetmaleId">
+        delete
+        from setmeal_dish
+        where setmeal_id=#{id};
+    </delete>
+
+    <!--    根据套餐信息查询菜品信息-->
+    <select id="getBySetmealId" resultType="com.sky.entity.SetmealDish">
+        select *
+        from setmeal_dish where setmeal_id=#{id};
+    </select>
+</mapper>
