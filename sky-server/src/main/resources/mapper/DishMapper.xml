@@ -65,6 +65,20 @@
         where id = #{id}
     </update>
 
+    <!--    根据条件统计菜品数量-->
+    <select id="countByMap" resultType="java.lang.Integer">
+        select count(id) from dish
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
+
     <!--    根据套餐id查询菜品-->
     <select id="getBySetmealId" resultType="com.sky.entity.Dish">
         select d.*
